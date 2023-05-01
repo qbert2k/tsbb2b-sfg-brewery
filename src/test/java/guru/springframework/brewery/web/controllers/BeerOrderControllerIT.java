@@ -9,16 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
+/**
+ * Created by jt on 2019-03-12.
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BeerOrderControllerIT {
 
     @Autowired
-    private TestRestTemplate restTemplate;
+    private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    CustomerRepository customerRepository;
 
     Customer customer;
 
@@ -29,9 +32,9 @@ public class BeerOrderControllerIT {
 
     @Test
     void testListOrders() {
-        String url = "/api/v1/customers/" + customer.getId() + "/orders";
+        String url = "/api/v1/customers/" + customer.getId().toString() + " /orders";
 
-        BeerOrderPagedList pagedList = restTemplate.getForObject(url, BeerOrderPagedList.class);
+        BeerOrderPagedList pagedList = testRestTemplate.getForObject(url, BeerOrderPagedList.class);
 
         assertThat(pagedList.getContent()).hasSize(1);
     }

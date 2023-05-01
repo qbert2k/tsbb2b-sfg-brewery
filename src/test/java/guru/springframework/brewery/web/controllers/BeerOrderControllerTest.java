@@ -54,7 +54,8 @@ class BeerOrderControllerTest {
                 .id(UUID.randomUUID())
                 .customerRef("1234")
                 .beerOrderLines(List.of(BeerOrderLineDto
-                        .builder().beerId(validBeer.getId())
+                        .builder()
+                        .beerId(validBeer.getId())
                         .build()))
                 .build();
 
@@ -80,7 +81,7 @@ class BeerOrderControllerTest {
     void getOrder() throws Exception {
         given(beerOrderService.getOrderById(any(), any())).willReturn(beerOrder);
 
-        mockMvc.perform(get("/api/v1/customers/85d4506-e7dd-446e-a092-5f30b98e7b26/orders/f25767d9-34dd-446e-a092-5f30b98e7b26"))
+        mockMvc.perform(get("/api/v1/customers/85d4506-e7dd-446e-a092-5f30b98e7b26/orders/f25767d9-342a-48ac-a788-0a7a38ae6fb3"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }

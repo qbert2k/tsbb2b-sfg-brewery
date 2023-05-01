@@ -66,20 +66,23 @@ class BeerControllerTest {
 
         given(beerService.findBeerById(any())).willReturn(validBeer);
 
-        MvcResult result = mockMvc.perform(get("/api/v1/beer/" + validBeer.getId()))
+       MvcResult result=  mockMvc.perform(get("/api/v1/beer/" + validBeer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.id", is(validBeer.getId().toString())))
-                .andExpect(jsonPath("$.beerName", is(validBeer.getBeerName())))
-                .andExpect(jsonPath("$.createdDate", is(dateTimeFormatter.format(validBeer.getCreatedDate()))))
-                .andReturn();
+                .andExpect(jsonPath("$.beerName", is("Beer1")))
+                .andExpect(jsonPath("$.createdDate",
+                        is(dateTimeFormatter.format(validBeer.getCreatedDate()))))
+               .andReturn();
 
         System.out.println(result.getResponse().getContentAsString());
+
     }
 
     @DisplayName("List Ops - ")
     @Nested
     public class TestListOperations {
+
         @Captor
         ArgumentCaptor<String> beerNameCaptor;
 
@@ -98,6 +101,7 @@ class BeerControllerTest {
             beers.add(BeerDto.builder().id(UUID.randomUUID())
                     .version(1)
                     .beerName("Beer4")
+                    .upc(123123123122L)
                     .beerStyle(BeerStyleEnum.PALE_ALE)
                     .price(new BigDecimal("12.99"))
                     .quantityOnHand(66)
@@ -111,14 +115,16 @@ class BeerControllerTest {
                     pageRequestCaptor.capture())).willReturn(beerPagedList);
         }
 
-        @DisplayName("Test List Beers - no parameters")
+        @DisplayName("Test list beers - no parameters")
         @Test
         void testListBeers() throws Exception {
-            mockMvc.perform(get("/api/v1/beer").accept(MediaType.APPLICATION_JSON))
+            mockMvc.perform(get("/api/v1/beer")
+                        .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$.content", hasSize(2)))
                     .andExpect(jsonPath("$.content[0].id", is(validBeer.getId().toString())));
         }
     }
+
 }
